@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador Automático de Imágenes del Manga</title>
+  <style>
+    body {
+      background: #0d0d0d;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 { text-align: center; }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      margin-top: 5px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #222;
+      color: #fff;
+    }
+    button {
+      background: #007bff;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      border-radius: 5px;
+      margin-top: 15px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    button:hover { background: #3399ff; }
+    #imageList input {
+      margin-bottom: 8px;
+    }
+    #output {
+      margin-top: 20px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 150px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>🖼️ Generador de Imágenes del Manga</h1>
+
+  <label>URL Base:</label>
+  <input type="url" id="mangaBase" placeholder="https://nimegt.net/dji8wuwb9" required>
+
+  <label>Cantidad de Imágenes:</label>
+  <input type="number" id="mangaCount" placeholder="Ej: 27" required>
+
+  <button id="generateMangaImgs">Generar imágenes automáticamente</button>
+
+  <h3>O agrega imágenes manualmente:</h3>
+  <div id="imageList">
+    <input type="url" class="mangaImg" placeholder="https://...">
+  </div>
+
+  <button id="addImage">+ Agregar otra imagen</button>
+
+  <div id="output">
+    <h3>💾 Código generado:</h3>
+    <textarea id="generatedCode" readonly placeholder="Aquí aparecerá el código HTML con las imágenes..."></textarea>
+    <button id="copyCode">📋 Copiar código</button>
+  </div>
+
+  <script>
+    const imageList = document.getElementById("imageList");
+    const output = document.getElementById("generatedCode");
+
+    // --- Agregar campos manuales ---
+    document.getElementById("addImage").addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "url";
+      input.placeholder = "https://...";
+      input.classList.add("mangaImg");
+      imageList.appendChild(input);
+    });
+
+    // --- Generar imágenes automáticas ---
+    document.getElementById("generateMangaImgs").addEventListener("click", () => {
+      const base = document.getElementById("mangaBase").value.trim();
+      const count = parseInt(document.getElementById("mangaCount").value);
+
+      if (!base || isNaN(count) || count < 1) {
+        alert("Por favor ingresa una URL base válida y un número mayor a 0.");
+        return;
+      }
+
+      imageList.innerHTML = "";
+
+      for (let i = 1; i <= count; i++) {
+        const input = document.createElement("input");
+        input.type = "url";
+        input.classList.add("mangaImg");
+        input.value = `${base}${i}t.jpg`;
+        imageList.appendChild(input);
+      }
+
+      generateCode();
+    });
+
+    // --- Generar el código HTML ---
+    function generateCode() {
+      const imgs = Array.from(document.querySelectorAll(".mangaImg"))
+        .map(i => i.value.trim())
+        .filter(v => v !== "");
+
+      if (!imgs.length) {
+        output.value = "";
+        return;
+      }
+
+      const html = imgs.map(url => `<div class="post"><img src="${url}" alt="Imagen del manga"></div>`).join("\n");
+      output.value = html;
+    }
+
+    // --- Actualizar el código cuando se edite una URL manual ---
+    imageList.addEventListener("input", generateCode);
+
+    // --- Copiar al portapapeles ---
+    document.getElementById("copyCode").addEventListener("click", () => {
+      output.select();
+      document.execCommand("copy");
+      alert("✅ Código copiado al portapapeles.");
+    });
+  </script>
+</body>
+</html>
