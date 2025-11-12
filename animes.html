@@ -237,6 +237,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${data.title}</title>
 <style>
+
+  .container {
+  max-width: 600px;
+  margin: auto;
+  background: #000; /* negro puro para que no se vea línea */
+  overflow: hidden;
+}
+
+.post {
+  line-height: 0; /* elimina el espacio entre imágenes */
+  font-size: 0;   /* evita espacios en blanco invisibles */
+}
+
+.post img {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  vertical-align: middle;
+}
+
 body{font-family:Arial;background:#0a0a0a;color:#fff;margin:0;padding:0}
 .container{max-width:600px;margin:auto;background:#181818;overflow:hidden}
 .anime-header{background-image:url('${data.backgroundImage}');background-size:cover;background-position:center;height:250px;position:relative}
